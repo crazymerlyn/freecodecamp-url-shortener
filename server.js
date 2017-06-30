@@ -6,7 +6,6 @@
 'use strict';
 
 var fs = require('fs');
-var validUrl = require('validator');
 var mongo = require('mongodb').MongoClient;
 var express = require('express');
 var app = express();
@@ -18,6 +17,10 @@ function random_string(length) {
     res += chars[~~(Math.random() * chars.length)];
   }
   return res;
+}
+
+function isValidUrl(url) {
+  return !!/((https?|ftp):\/\/)?(^\.+)\..+/.match(url)
 }
 
 if (!process.env.DISABLE_XORIGIN) {
@@ -52,7 +55,7 @@ app.route('/')
 app.get(/^\/new\/(.*)/, function(req, res) {
   var url = req.params[0];
   
-  if (!validUrl.isUri(url)) {
+  if (!isValidUrl(url)) {
     res.json({
       error: "Invalid url"
     });
