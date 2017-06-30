@@ -79,7 +79,7 @@ app.get('/:url', function(req, res) {
       if (err) throw err;
       db.close();
       if (data.length) {
-        res.redirect(data.original_url);
+        res.redirect(data[0].original_url);
       } else {
         res.json({
           error: "This url is not in the database"
