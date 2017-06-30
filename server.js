@@ -73,18 +73,19 @@ app.get('/:url', function(req, res) {
   var shortened = req.params.url;
   mongo.connect(process.env.DATABASE_URI, function(err, db) {
     if (err) throw err;
-    var found = db.collection('urls').find({
+    db.collection('urls').find({
       shortened_url: shortened
+    }).toArray(function(err, data) {
+      if (err) throw err;
+      db.close();
+      if (data.length) {
+        res.redirect(data.original_url);
+      } else {
+        res.json({
+          error: "This url is not in the database"
+        });
+      }
     });
-    db.close();
-    if (found.hasNext()) {
-      var data = found.next();
-      res.redirect(data.original_url);
-    } else {
-      res.json({
-        error: "This url is not in the database"
-      });
-    }
   });
 });
 
