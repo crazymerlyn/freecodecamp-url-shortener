@@ -12,9 +12,9 @@ var app = express();
 
 function random_string(length) {
   var res = "";
-  var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX";
+  var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   for (var i = 0; i < length; ++i) {
-    res += chars[~~(Math.random() * char.length)];
+    res += chars[~~(Math.random() * chars.length)];
   }
 }
 
@@ -50,9 +50,30 @@ app.route('/')
 app.get('/new/:url', function(req, res) {
   var url = req.params.url;
   var shortened = random_string(6);
+  mongo.connect(process.env.DATABASE_URI, function(err, db) {
+    if (err) throw err;
+    db.collection('urls').insert({
+      original_url: url,
+      shortened_url: shortened
+    }, function (err, data) {
+      if (err) throw err;
+      console.log(data);
+      db.close();
+    })
+  });
 });
 
 app.get('/:url', function(req, res) {
+  var shortened = req.params.url;
+  mongo.connect(process.env.DATABASE_URI, function(err, db) {
+    if (err) throw err;
+    db.collection('urls').find({
+      shortened_url: shortened
+    }).foreach(function(data) {
+      res.redirect(data.original_url);
+      return;
+    });
+  });
 });
 
 // Respond not found to all the wrong routes
