@@ -16,6 +16,7 @@ function random_string(length) {
   for (var i = 0; i < length; ++i) {
     res += chars[~~(Math.random() * chars.length)];
   }
+  return res;
 }
 
 if (!process.env.DISABLE_XORIGIN) {
@@ -47,8 +48,9 @@ app.route('/')
 		  res.sendFile(process.cwd() + '/views/index.html');
     })
 
-app.get('/new/:url', function(req, res) {
+app.get('/new/:url*', function(req, res) {
   var url = req.params.url;
+  console.log(url);
   var shortened = random_string(6);
   mongo.connect(process.env.DATABASE_URI, function(err, db) {
     if (err) throw err;
@@ -58,6 +60,10 @@ app.get('/new/:url', function(req, res) {
     }, function (err, data) {
       if (err) throw err;
       console.log(data);
+      res.json({
+        original_url: url,
+        shortened_url: shortened
+      })
       db.close();
     })
   });
@@ -73,6 +79,7 @@ app.get('/:url', function(req, res) {
       res.redirect(data.original_url);
       return;
     });
+    db.close();
     res.json({
       error: "This url is not in the database"
     })
