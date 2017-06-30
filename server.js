@@ -48,8 +48,8 @@ app.route('/')
 		  res.sendFile(process.cwd() + '/views/index.html');
     })
 
-app.get('/new/:url*', function(req, res) {
-  var url = req.params.url;
+app.get(/^\/new\/(.*)/, function(req, res) {
+  var url = req.params[0];
   console.log(url);
   var shortened = random_string(6);
   mongo.connect(process.env.DATABASE_URI, function(err, db) {
@@ -62,7 +62,7 @@ app.get('/new/:url*', function(req, res) {
       console.log(data);
       res.json({
         original_url: url,
-        shortened_url: shortened
+        shortened_url: "https://swanky-innocent.glitch.me/" + shortened
       })
       db.close();
     })
@@ -73,16 +73,18 @@ app.get('/:url', function(req, res) {
   var shortened = req.params.url;
   mongo.connect(process.env.DATABASE_URI, function(err, db) {
     if (err) throw err;
-    db.collection('urls').find({
+    var found = db.collection('urls').find({
       shortened_url: shortened
-    }).foreach(function(data) {
-      res.redirect(data.original_url);
-      return;
     });
     db.close();
-    res.json({
-      error: "This url is not in the database"
-    })
+    if (found.hasNext()) {
+      var data = found.next();
+      res.redirect(data.original_url);
+    } else {
+      res.json({
+        error: "This url is not in the database"
+      });
+    }
   });
 });
 
