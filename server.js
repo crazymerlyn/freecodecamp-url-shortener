@@ -8,6 +8,7 @@
 var fs = require('fs');
 var mongo = require('mongodb').MongoClient;
 var express = require('express');
+var validUrl = require('valid-url');
 var app = express();
 
 function random_string(length) {
@@ -51,10 +52,11 @@ app.route('/')
 app.get(/^\/new\/(.*)/, function(req, res) {
   var url = req.params[0];
   
-  if (!require('valid-url').isUri(url)) {
+  if (!validUrl.isUri(url)) {
     res.json({
-      error: "Wrong url for
+      error: "Invalid url"
     });
+    return;
   }
   
   var shortened = random_string(6);
