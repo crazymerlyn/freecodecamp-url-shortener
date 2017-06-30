@@ -39,7 +39,10 @@ app.route('/')
 		  res.sendFile(process.cwd() + '/views/index.html');
     })
 
-app.get()
+app.get('/new/:url', function(req, res) {
+  var url = req.params.url;
+  
+})
 
 // Respond not found to all the wrong routes
 app.use(function(req, res, next){
