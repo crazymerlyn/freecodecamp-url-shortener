@@ -73,6 +73,9 @@ app.get('/:url', function(req, res) {
       res.redirect(data.original_url);
       return;
     });
+    res.json({
+      error: "This url is not in the database"
+    })
   });
 });
 
