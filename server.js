@@ -6,9 +6,9 @@
 'use strict';
 
 var fs = require('fs');
+var validUrl = require('validator');
 var mongo = require('mongodb').MongoClient;
 var express = require('express');
-var validUrl = require('valid-url');
 var app = express();
 
 function random_string(length) {
