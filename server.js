@@ -10,6 +10,14 @@ var mongo = require('mongodb').MongoClient;
 var express = require('express');
 var app = express();
 
+function random_string(length) {
+  var res = "";
+  var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX";
+  for (var i = 0; i < length; ++i) {
+    res += chars[~~(Math.random() * char.length)];
+  }
+}
+
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
     var allowedOrigins = ['https://narrow-plane.gomix.me', 'https://www.freecodecamp.com'];
@@ -41,8 +49,11 @@ app.route('/')
 
 app.get('/new/:url', function(req, res) {
   var url = req.params.url;
-  
-})
+  var shortened = random_string(6);
+});
+
+app.get('/:url', function(req, res) {
+});
 
 // Respond not found to all the wrong routes
 app.use(function(req, res, next){
