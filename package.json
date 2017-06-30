@@ -2,7 +2,8 @@
   "name": "fcc-learn-npm-package-json",
   "dependencies": {
     "express": "^4.15.3",
-    "mongodb": "^3.4.0"
+    "mongodb": "^3.4.0",
+    "valid-url": "^1.0.9"
   },
   "main": "server.js",
   "scripts": {
@@ -15,4 +16,4 @@
     "type": "git",
     "url": "https://idontknow/todo.git"
   }
-}
+}}

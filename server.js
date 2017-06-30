@@ -20,7 +20,8 @@ function random_string(length) {
 }
 
 function isValidUrl(url) {
-  return !!/((https?|ftp):\/\/)?(^\.+)\..+/.match(url)
+  //return url.search(/^((https?|ftp):\/\/)?\.+\..+$/) != -1;
+  validUrl.isUri(url);
 }
 
 if (!process.env.DISABLE_XORIGIN) {
