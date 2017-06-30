@@ -50,7 +50,13 @@ app.route('/')
 
 app.get(/^\/new\/(.*)/, function(req, res) {
   var url = req.params[0];
-  console.log(url);
+  
+  if (!require('valid-url').isUri(url)) {
+    res.json({
+      error: "Wrong url for
+    });
+  }
+  
   var shortened = random_string(6);
   mongo.connect(process.env.DATABASE_URI, function(err, db) {
     if (err) throw err;
