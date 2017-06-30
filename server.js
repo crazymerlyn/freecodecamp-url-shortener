@@ -8,9 +8,10 @@
 var fs = require('fs');
 var mongo = require('mongodb').MongoClient;
 var express = require('express');
+var validUrl = require('valid-url');
 var app = express();
 
-function random_string(length) {
+function randomString(length) {
   var res = "";
   var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   for (var i = 0; i < length; ++i) {
@@ -21,7 +22,7 @@ function random_string(length) {
 
 function isValidUrl(url) {
   //return url.search(/^((https?|ftp):\/\/)?\.+\..+$/) != -1;
-  validUrl.isUri(url);
+  return validUrl.isUri(url);
 }
 
 if (!process.env.DISABLE_XORIGIN) {
@@ -63,7 +64,7 @@ app.get(/^\/new\/(.*)/, function(req, res) {
     return;
   }
   
-  var shortened = random_string(6);
+  var shortened = randomString(6);
   mongo.connect(process.env.DATABASE_URI, function(err, db) {
     if (err) throw err;
     db.collection('urls').insert({
